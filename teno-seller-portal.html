@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TENO SELLER | منطقة العميل</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --plum:#2A1A2E; --plum-deep:#1B1019; --gold:#D9A94E;
+    --cream:#FBF6EE; --rose:#E9B9C4; --ink:#241620; --muted:#8A7B86;
+    --ok:#3B6D11; --okbg:#EAF3DE; --warn:#854F0B; --warnbg:#FAEEDA; --info:#185FA5; --infobg:#E6F1FB;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Tajawal',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;}
+  h1,h2,h3,h4{font-family:'Cairo',sans-serif;}
+  a{text-decoration:none;color:inherit;}
+  img{max-width:100%;display:block;}
+
+  /* TOP BAR */
+  .topbar{
+    background:var(--plum);color:var(--cream);
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 28px;position:sticky;top:0;z-index:50;
+  }
+  .logo{font-family:'Cairo',sans-serif;font-weight:800;font-size:20px;letter-spacing:1px;}
+  .logo span{color:var(--gold);}
+  .topbar-right{display:flex;align-items:center;gap:16px;font-size:14px;}
+  .topbar-right .uname{display:flex;align-items:center;gap:8px;}
+  .avatar-sm{
+    width:30px;height:30px;border-radius:50%;background:var(--gold);color:var(--plum-deep);
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;font-family:'Cairo',sans-serif;
+  }
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:6px;
+    padding:10px 22px;border-radius:999px;font-weight:700;font-size:14px;
+    font-family:'Cairo',sans-serif;border:1.5px solid transparent;cursor:pointer;
+    transition:.2s; background:none;
+  }
+  .btn-gold{background:var(--gold);color:var(--plum-deep);}
+  .btn-gold:hover{background:#c4943f;}
+  .btn-outline-light{border-color:rgba(251,246,238,.35);color:var(--cream);}
+  .btn-outline-light:hover{background:rgba(251,246,238,.12);}
+  .btn-plum{background:var(--plum);color:var(--cream);}
+  .btn-plum:hover{background:var(--plum-deep);}
+  .btn-ghost{border-color:rgba(42,26,46,.18);color:var(--plum);}
+  .btn-ghost:hover{background:rgba(42,26,46,.05);}
+  .btn-danger{border-color:#E24B4A;color:#A32D2D;}
+  .btn-danger:hover{background:#FCEBEB;}
+  .btn-block{width:100%;}
+  .btn:disabled{opacity:.5;cursor:not-allowed;}
+
+  /* AUTH SCREENS */
+  .auth-wrap{
+    min-height:calc(100vh - 64px);display:flex;align-items:center;justify-content:center;padding:40px 20px;
+    background:radial-gradient(circle at 20% 20%, rgba(217,169,78,0.08), transparent 50%),
+               radial-gradient(circle at 80% 80%, rgba(233,185,196,0.12), transparent 50%);
+  }
+  .auth-card{
+    background:#fff;border:1px solid rgba(42,26,46,0.08);border-radius:20px;
+    padding:40px;max-width:420px;width:100%;box-shadow:0 24px 60px -32px rgba(42,26,46,.35);
+  }
+  .auth-card h2{color:var(--plum);font-size:24px;margin-bottom:6px;}
+  .auth-card .sub{color:var(--muted);font-size:14px;margin-bottom:28px;}
+  .field{margin-bottom:18px;}
+  .field label{display:block;font-size:13px;font-weight:700;color:var(--plum);margin-bottom:8px;font-family:'Cairo',sans-serif;}
+  .field input,.field select{
+    width:100%;padding:12px 14px;border:1.5px solid rgba(42,26,46,0.12);border-radius:10px;
+    font-family:'Tajawal',sans-serif;font-size:14px;background:var(--cream);color:var(--ink);
+    transition:border-color .2s;
+  }
+  .field input:focus,.field select:focus{outline:none;border-color:var(--gold);}
+  .field .hint{font-size:12px;color:var(--muted);margin-top:6px;}
+  .err-msg{
+    background:#FCEBEB;color:#A32D2D;border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:18px;display:none;
+  }
+  .ok-msg{
+    background:var(--okbg);color:var(--ok);border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:18px;display:none;
+  }
+  .auth-switch{text-align:center;margin-top:22px;font-size:14px;color:var(--muted);}
+  .auth-switch a{color:var(--gold);font-weight:700;}
+  .demo-note{
+    margin-top:24px;padding:12px 14px;background:var(--infobg);color:var(--info);
+    border-radius:10px;font-size:12px;line-height:1.7;
+  }
+
+  /* APP LAYOUT */
+  .app-layout{display:flex;min-height:calc(100vh - 64px);}
+  .sidebar{
+    width:240px;background:#fff;border-left:1px solid rgba(42,26,46,0.08);
+    padding:24px 16px;flex-shrink:0;
+  }
+  @media(max-width:860px){.sidebar{display:none;}}
+  .side-link{
+    display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;
+    font-size:14px;font-weight:500;color:var(--ink);margin-bottom:6px;cursor:pointer;transition:.2s;
+  }
+  .side-link:hover{background:var(--cream);}
+  .side-link.active{background:var(--plum);color:var(--cream);}
+  .side-link .ic{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  .main{flex:1;padding:32px;max-width:1000px;}
+  .page{display:none;}
+  .page.active{display:block;animation:fadeIn .4s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  .page-head{margin-bottom:28px;}
+  .page-head h1{font-size:26px;color:var(--plum);margin-bottom:6px;}
+  .page-head p{color:var(--muted);font-size:14px;}
+
+  /* mobile nav */
+  .mobile-tabs{
+    display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;
+    border-top:1px solid rgba(42,26,46,0.08);z-index:60;
+    justify-content:space-around;padding:8px 0;
+  }
+  @media(max-width:860px){.mobile-tabs{display:flex;} .main{padding-bottom:90px;}}
+  .mtab{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;color:var(--muted);cursor:pointer;}
+  .mtab.active{color:var(--plum);font-weight:700;}
+
+  /* CARDS / WIDGETS */
+  .grid{display:grid;gap:20px;}
+  .grid-3{grid-template-columns:repeat(3,1fr);}
+  .grid-2{grid-template-columns:repeat(2,1fr);}
+  @media(max-width:760px){.grid-3,.grid-2{grid-template-columns:1fr;}}
+  .card{
+    background:#fff;border:1px solid rgba(42,26,46,0.08);border-radius:16px;padding:24px;
+  }
+  .stat-card .num{font-size:28px;font-weight:800;font-family:'Cairo',sans-serif;color:var(--plum);}
+  .stat-card .lbl{font-size:13px;color:var(--muted);margin-top:4px;}
+  .stat-card .ic{
+    width:42px;height:42px;border-radius:12px;background:var(--cream);display:flex;align-items:center;
+    justify-content:center;color:var(--gold);margin-bottom:14px;font-size:20px;
+  }
+
+  /* table */
+  table{width:100%;border-collapse:collapse;font-size:14px;}
+  th{text-align:right;color:var(--muted);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.5px;padding:10px 12px;border-bottom:1px solid rgba(42,26,46,.08);}
+  td{padding:14px 12px;border-bottom:1px solid rgba(42,26,46,.06);}
+  tr:last-child td{border-bottom:none;}
+  .badge{display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:700;}
+  .badge-ok{background:var(--okbg);color:var(--ok);}
+  .badge-warn{background:var(--warnbg);color:var(--warn);}
+  .badge-info{background:var(--infobg);color:var(--info);}
+
+  /* profile */
+  .profile-head{display:flex;align-items:center;gap:18px;margin-bottom:28px;}
+  .avatar-lg{
+    width:64px;height:64px;border-radius:50%;background:linear-gradient(140deg,var(--gold),var(--rose));
+    display:flex;align-items:center;justify-content:center;font-family:'Cairo',sans-serif;font-weight:800;
+    font-size:24px;color:var(--plum-deep);flex-shrink:0;
+  }
+  .profile-head h2{font-size:20px;color:var(--plum);}
+  .profile-head p{color:var(--muted);font-size:13px;}
+
+  /* brand builder */
+  .brand-zone{
+    border:2px dashed rgba(42,26,46,.15);border-radius:14px;padding:32px;text-align:center;
+    cursor:pointer;transition:.2s;background:var(--cream);
+  }
+  .brand-zone:hover{border-color:var(--gold);}
+  .brand-zone img{max-width:140px;max-height:140px;margin:0 auto 12px;border-radius:10px;}
+  .product-pick{
+    display:flex;align-items:center;gap:14px;border:1px solid rgba(42,26,46,.08);border-radius:12px;
+    padding:14px;margin-bottom:10px;cursor:pointer;transition:.2s;
+  }
+  .product-pick:hover{border-color:var(--gold);background:var(--cream);}
+  .product-pick.selected{border-color:var(--gold);background:#FAEEDA;}
+  .product-pick .p-thumb{
+    width:46px;height:46px;border-radius:10px;background:linear-gradient(140deg, rgba(217,169,78,.25), rgba(233,185,196,.3));
+    flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:18px;
+  }
+  .product-pick .p-info{flex:1;}
+  .product-pick .p-info h4{font-size:14px;}
+  .product-pick .p-info span{font-size:12px;color:var(--muted);}
+  .check{width:20px;height:20px;border-radius:50%;border:2px solid rgba(42,26,46,.2);flex-shrink:0;transition:.2s;}
+  .product-pick.selected .check{border-color:var(--gold);background:var(--gold);}
+
+  .row-between{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;}
+  .empty{text-align:center;padding:40px 20px;color:var(--muted);}
+  .empty .ic{font-size:36px;margin-bottom:12px;}
+  .toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--plum);color:var(--cream);padding:12px 24px;border-radius:999px;font-size:14px;
+    font-weight:700;opacity:0;transition:.3s;z-index:300;pointer-events:none;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">TENO <span>SELLER</span></div>
+  <div class="topbar-right" id="topbarRight"></div>
+</div>
+
+<!-- ================= AUTH: LOGIN ================= -->
+<div class="auth-wrap page active" id="page-login">
+  <div class="auth-card">
+    <h2>تسجيل الدخول</h2>
+    <p class="sub">مرحباً بعودتك! سجّل دخولك لمتابعة براندك وطلباتك.</p>
+    <div class="err-msg" id="loginErr"></div>
+    <div class="ok-msg" id="loginOk"></div>
+    <div class="field">
+      <label>البريد الإلكتروني</label>
+      <input type="email" id="loginEmail" placeholder="example@email.com">
+    </div>
+    <div class="field">
+      <label>كلمة المرور</label>
+      <input type="password" id="loginPass" placeholder="••••••••">
+    </div>
+    <button class="btn btn-gold btn-block" onclick="doLogin()">دخول</button>
+    <div class="auth-switch">ما عندك حساب؟ <a onclick="goto('page-register')">سجّل الآن</a></div>
+    <div class="demo-note">
+      نسخة تجريبية: بيانات حسابك تُحفظ في متصفحك (localStorage). حساب تجريبي: <b>demo@teno.ma</b> / <b>123456</b> — يتضمن منتجات أملو الأربعة.
+    </div>
+  </div>
+</div>
+
+<!-- ================= AUTH: REGISTER ================= -->
+<div class="auth-wrap page" id="page-register">
+  <div class="auth-card">
+    <h2>إنشاء حساب جديد</h2>
+    <p class="sub">انطلق ببراندك الخاص مع TENO SELLER في دقائق.</p>
+    <div class="err-msg" id="regErr"></div>
+    <div class="field">
+      <label>الاسم الكامل</label>
+      <input type="text" id="regName" placeholder="مثال: سلمى العلوي">
+    </div>
+    <div class="field">
+      <label>البريد الإلكتروني</label>
+      <input type="email" id="regEmail" placeholder="example@email.com">
+    </div>
+    <div class="field">
+      <label>رقم الهاتف</label>
+      <input type="tel" id="regPhone" placeholder="06XXXXXXXX">
+    </div>
+    <div class="field">
+      <label>كلمة المرور</label>
+      <input type="password" id="regPass" placeholder="6 أحرف على الأقل">
+    </div>
+    <button class="btn btn-gold btn-block" onclick="doRegister()">إنشاء الحساب</button>
+    <div class="auth-switch">عندك حساب من قبل؟ <a onclick="goto('page-login')">سجّل دخولك</a></div>
+  </div>
+</div>
+
+<!-- ================= APP ================= -->
+<div class="app-layout page" id="page-app">
+  <div class="sidebar">
+    <div class="side-link active" data-tab="dashboard" onclick="showTab('dashboard')">
+      <span class="ic">◆</span> لوحة التحكم
+    </div>
+    <div class="side-link" data-tab="orders" onclick="showTab('orders')">
+      <span class="ic">▤</span> طلباتي
+    </div>
+    <div class="side-link" data-tab="brand" onclick="showTab('brand')">
+      <span class="ic">✦</span> براندي ومنتجاتي
+    </div>
+    <div class="side-link" data-tab="profile" onclick="showTab('profile')">
+      <span class="ic">●</span> حسابي
+    </div>
+    <div style="height:1px;background:rgba(42,26,46,.08);margin:16px 0;"></div>
+    <div class="side-link" onclick="logout()" style="color:#A32D2D;">
+      <span class="ic">×</span> تسجيل الخروج
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="tab-dashboard">
+      <div class="page-head">
+        <h1 id="welcomeName">مرحباً بك</h1>
+        <p>هذه لوحة تحكم سريعة لبراندك ومبيعاتك مع TENO SELLER.</p>
+      </div>
+      <div class="grid grid-3" style="margin-bottom:20px;">
+        <div class="card stat-card">
+          <div class="ic">▤</div>
+          <div class="num" id="statOrders">0</div>
+          <div class="lbl">إجمالي الطلبات</div>
+        </div>
+        <div class="card stat-card">
+          <div class="ic">✓</div>
+          <div class="num" id="statDelivered">0</div>
+          <div class="lbl">طلبات مُسلَّمة</div>
+        </div>
+        <div class="card stat-card">
+          <div class="ic">✦</div>
+          <div class="num" id="statProducts">0</div>
+          <div class="lbl">منتجات في براندي</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="row-between" style="margin-bottom:8px;">
+          <h3 style="color:var(--plum);font-size:16px;">آخر الطلبات</h3>
+          <a class="btn btn-ghost" style="padding:6px 16px;font-size:13px;" onclick="showTab('orders')">عرض الكل</a>
+        </div>
+        <table>
+          <thead><tr><th>رقم الطلب</th><th>المنتج</th><th>التاريخ</th><th>الحالة</th></tr></thead>
+          <tbody id="dashOrdersBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ORDERS -->
+    <div class="page" id="tab-orders">
+      <div class="page-head">
+        <h1>طلباتي</h1>
+        <p>تابع حالة جميع طلبات زبنائك من هنا.</p>
+      </div>
+      <div class="card">
+        <table>
+          <thead><tr><th>رقم الطلب</th><th>المنتج</th><th>الزبون</th><th>المبلغ</th><th>التاريخ</th><th>الحالة</th></tr></thead>
+          <tbody id="ordersBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- BRAND -->
+    <div class="page" id="tab-brand">
+      <div class="page-head">
+        <h1>براندي ومنتجاتي</h1>
+        <p>ارفع شعارك واختر المنتجات التي تريد بيعها تحت اسم براندك.</p>
+      </div>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3 style="color:var(--plum);font-size:16px;margin-bottom:14px;">شعار البراند</h3>
+          <div class="brand-zone" onclick="document.getElementById('logoInput').click()">
+            <div id="logoPreviewWrap">
+              <div style="font-size:36px;margin-bottom:10px;color:var(--gold);">⬆</div>
+              <p style="font-size:14px;color:var(--muted);">اضغط لرفع شعار براندك (PNG / JPG)</p>
+            </div>
+          </div>
+          <input type="file" id="logoInput" accept="image/*" style="display:none" onchange="onLogoUpload(event)">
+          <div class="field" style="margin-top:18px;">
+            <label>اسم البراند</label>
+            <input type="text" id="brandName" placeholder="مثال: Glow by Salma">
+          </div>
+          <button class="btn btn-gold btn-block" onclick="saveBrand()">حفظ معلومات البراند</button>
+        </div>
+        <div class="card">
+          <h3 style="color:var(--plum);font-size:16px;margin-bottom:14px;">اختر منتجاتك من الكتالوج</h3>
+          <div id="productPickList"></div>
+          <div style="margin-top:14px;font-size:13px;color:var(--muted);">
+            عدد المنتجات المختارة: <b id="selectedCount" style="color:var(--plum)">0</b>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="page" id="tab-profile">
+      <div class="page-head">
+        <h1>حسابي</h1>
+        <p>عدّل معلومات حسابك الشخصية.</p>
+      </div>
+      <div class="card" style="max-width:520px;">
+        <div class="profile-head">
+          <div class="avatar-lg" id="profileAvatar"></div>
+          <div>
+            <h2 id="profileName"></h2>
+            <p id="profileEmail"></p>
+          </div>
+        </div>
+        <div class="ok-msg" id="profileOk"></div>
+        <div class="field">
+          <label>الاسم الكامل</label>
+          <input type="text" id="pName">
+        </div>
+        <div class="field">
+          <label>البريد الإلكتروني</label>
+          <input type="email" id="pEmail" disabled>
+        </div>
+        <div class="field">
+          <label>رقم الهاتف</label>
+          <input type="tel" id="pPhone">
+        </div>
+        <div class="field">
+          <label>كلمة المرور الجديدة (اختياري)</label>
+          <input type="password" id="pPass" placeholder="اتركه فارغاً إذا لا تريد التغيير">
+        </div>
+        <button class="btn btn-gold" onclick="saveProfile()">حفظ التغييرات</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="mobile-tabs">
+  <div class="mtab active" data-tab="dashboard" onclick="showTab('dashboard')">◆<span>الرئيسية</span></div>
+  <div class="mtab" data-tab="orders" onclick="showTab('orders')">▤<span>طلباتي</span></div>
+  <div class="mtab" data-tab="brand" onclick="showTab('brand')">✦<span>براندي</span></div>
+  <div class="mtab" data-tab="profile" onclick="showTab('profile')">●<span>حسابي</span></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===================== DATA LAYER (localStorage demo) ===================== */
+const DB_KEY = 'teno_users';
+const SESSION_KEY = 'teno_session';
+
+const CATALOG = [
+  // AMLO CLASSIC
+  {id:'ac1', name:'مرطب الوجه اليومي', cat:'أملو كلاسيك', brand:'AMLO CLASSIC'},
+  {id:'ac2', name:'كريم اليدين المغذي', cat:'أملو كلاسيك', brand:'AMLO CLASSIC'},
+  {id:'ac3', name:'لوسيون الجسم المرطب', cat:'أملو كلاسيك', brand:'AMLO CLASSIC'},
+  {id:'ac4', name:'غسول الوجه اللطيف', cat:'أملو كلاسيك', brand:'AMLO CLASSIC'},
+  {id:'ac5', name:'واقي اليدين المضاد للجفاف', cat:'أملو كلاسيك', brand:'AMLO CLASSIC'},
+  {id:'ac6', name:'كريم الليل المرمم', cat:'أملو كلاسيك', brand:'AMLO CLASSIC'},
+  // AMLO GOLD
+  {id:'ag1', name:'سيروم الذهب 24K', cat:'أملو غولد', brand:'AMLO GOLD'},
+  {id:'ag2', name:'كريم الكولاجين المضاد للتجاعيد', cat:'أملو غولد', brand:'AMLO GOLD'},
+  {id:'ag3', name:'ماسك الكولاجين الليلي', cat:'أملو غولد', brand:'AMLO GOLD'},
+  {id:'ag4', name:'زيت الوجه الفاخر', cat:'أملو غولد', brand:'AMLO GOLD'},
+  {id:'ag5', name:'سيروم الهيالورونيك أسيد', cat:'أملو غولد', brand:'AMLO GOLD'},
+  {id:'ag6', name:'كريم العيون المضاد للتجاعيد', cat:'أملو غولد', brand:'AMLO GOLD'},
+  // AMLO WHITE
+  {id:'aw1', name:'سيروم التفتيح المكثف', cat:'أملو وايت', brand:'AMLO WHITE'},
+  {id:'aw2', name:'كريم البقع الداكنة', cat:'أملو وايت', brand:'AMLO WHITE'},
+  {id:'aw3', name:'واقي الشمس SPF50+ مع تفتيح', cat:'أملو وايت', brand:'AMLO WHITE'},
+  {id:'aw4', name:'تونر الإشراق بفيتامين C', cat:'أملو وايت', brand:'AMLO WHITE'},
+  {id:'aw5', name:'غسول التفتيح اليومي', cat:'أملو وايت', brand:'AMLO WHITE'},
+  {id:'aw6', name:'ماسك الإشراق الأسبوعي', cat:'أملو وايت', brand:'AMLO WHITE'},
+  // AMLO HAIR
+  {id:'ah1', name:'شامبو تقوية البصيلات', cat:'أملو هير', brand:'AMLO HAIR'},
+  {id:'ah2', name:'بلسم البيوتين المغذي', cat:'أملو هير', brand:'AMLO HAIR'},
+  {id:'ah3', name:'سيروم حماية الأطراف', cat:'أملو هير', brand:'AMLO HAIR'},
+  {id:'ah4', name:'ماسك الكيراتين العميق', cat:'أملو هير', brand:'AMLO HAIR'},
+  {id:'ah5', name:'زيت تغذية فروة الرأس', cat:'أملو هير', brand:'AMLO HAIR'},
+  {id:'ah6', name:'شامبو الكيراتين المعالج', cat:'أملو هير', brand:'AMLO HAIR'},
+  // SUPPLEMENTS & OTHERS
+  {id:'p1', name:'مكمل المورينغا', cat:'مكملات غذائية'},
+  {id:'p2', name:'كبسولات الكولاجين البحري', cat:'مكملات غذائية'},
+  {id:'p3', name:'زيت آلام المفاصل', cat:'زيوت طبيعية'},
+  {id:'p4', name:'زيت الأرغان النقي', cat:'زيوت طبيعية'},
+  {id:'p5', name:'شامبو ضد تساقط الشعر', cat:'شامبو'},
+  {id:'p6', name:'خل التفاح الطبيعي', cat:'مكملات غذائية'},
+];
+
+const SAMPLE_ORDERS = [
+  {id:'TS-1042', product:'مكمل المورينغا', client:'فاطمة ز.', amount:'249 د.م', date:'10/06/2026', status:'delivered'},
+  {id:'TS-1041', product:'كريم الريتينول', client:'محمد ا.', amount:'189 د.م', date:'09/06/2026', status:'shipping'},
+  {id:'TS-1039', product:'سيروم النياسيناميد', client:'خديجة ب.', amount:'159 د.م', date:'07/06/2026', status:'delivered'},
+  {id:'TS-1035', product:'شامبو ضد تساقط الشعر', client:'يوسف ر.', amount:'129 د.م', date:'04/06/2026', status:'pending'},
+  {id:'TS-1030', product:'زيت آلام المفاصل', client:'سعاد م.', amount:'175 د.م', date:'01/06/2026', status:'delivered'},
+];
+
+function loadUsers(){
+  let raw = localStorage.getItem(DB_KEY);
+  if(!raw){
+    const seed = {
+      'demo@teno.ma': {
+        name:'مستخدم تجريبي', email:'demo@teno.ma', phone:'0600000000', pass:'123456',
+        brandName:'TENO Demo Brand', logo:null,
+        products:['ac1','ac2','ag1','ag2','aw1','aw2','ah1','ah2'], orders:SAMPLE_ORDERS
+      }
+    };
+    localStorage.setItem(DB_KEY, JSON.stringify(seed));
+    return seed;
+  }
+  return JSON.parse(raw);
+}
+function saveUsers(users){ localStorage.setItem(DB_KEY, JSON.stringify(users)); }
+function currentUser(){
+  const email = localStorage.getItem(SESSION_KEY);
+  if(!email) return null;
+  const users = loadUsers();
+  return users[email] ? {email, ...users[email]} : null;
+}
+
+/* ===================== NAVIGATION ===================== */
+function goto(pageId){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  document.getElementById('loginErr').style.display='none';
+  document.getElementById('regErr').style.display='none';
+  document.getElementById('loginOk').style.display='none';
+}
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+/* ===================== AUTH ACTIONS ===================== */
+function doLogin(){
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const pass = document.getElementById('loginPass').value;
+  const users = loadUsers();
+  const err = document.getElementById('loginErr');
+  if(!email || !pass){ err.textContent='يرجى تعبئة جميع الحقول.'; err.style.display='block'; return; }
+  if(!users[email] || users[email].pass !== pass){
+    err.textContent='البريد الإلكتروني أو كلمة المرور غير صحيحة.'; err.style.display='block'; return;
+  }
+  err.style.display='none';
+  localStorage.setItem(SESSION_KEY, email);
+  enterApp();
+}
+
+function doRegister(){
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim().toLowerCase();
+  const phone = document.getElementById('regPhone').value.trim();
+  const pass = document.getElementById('regPass').value;
+  const err = document.getElementById('regErr');
+  if(!name || !email || !phone || !pass){ err.textContent='يرجى تعبئة جميع الحقول.'; err.style.display='block'; return; }
+  if(pass.length < 6){ err.textContent='يجب أن تكون كلمة المرور 6 أحرف على الأقل.'; err.style.display='block'; return; }
+  const users = loadUsers();
+  if(users[email]){ err.textContent='هذا البريد الإلكتروني مسجل بالفعل.'; err.style.display='block'; return; }
+  err.style.display='none';
+  users[email] = {name, email, phone, pass, brandName:'', logo:null, products:[], orders:[]};
+  saveUsers(users);
+  localStorage.setItem(SESSION_KEY, email);
+  enterApp();
+}
+
+function logout(){
+  localStorage.removeItem(SESSION_KEY);
+  goto('page-login');
+  document.getElementById('topbarRight').innerHTML='';
+}
+
+/* ===================== APP ENTRY ===================== */
+function enterApp(){
+  const user = currentUser();
+  if(!user){ goto('page-login'); return; }
+  goto('page-app');
+  renderTopbar(user);
+  renderDashboard(user);
+  renderOrders(user);
+  renderBrand(user);
+  renderProfile(user);
+}
+
+function renderTopbar(user){
+  const initials = (user.name||user.email)[0].toUpperCase();
+  document.getElementById('topbarRight').innerHTML = `
+    <div class="uname"><div class="avatar-sm">${initials}</div> ${user.name || user.email}</div>
+    <button class="btn btn-outline-light" style="padding:6px 16px;font-size:13px;" onclick="logout()">خروج</button>
+  `;
+}
+
+/* ===================== TABS ===================== */
+function showTab(tab){
+  document.querySelectorAll('#page-app .page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.querySelectorAll('.side-link[data-tab]').forEach(l=>l.classList.toggle('active', l.dataset.tab===tab));
+  document.querySelectorAll('.mtab').forEach(l=>l.classList.toggle('active', l.dataset.tab===tab));
+}
+
+/* ===================== RENDER: DASHBOARD ===================== */
+const STATUS_MAP = {
+  delivered:{label:'تم التوصيل', cls:'badge-ok'},
+  shipping:{label:'قيد التوصيل', cls:'badge-info'},
+  pending:{label:'قيد التجهيز', cls:'badge-warn'}
+};
+
+function renderDashboard(user){
+  document.getElementById('welcomeName').textContent = 'مرحباً، ' + (user.name || user.email);
+  const orders = user.orders || [];
+  document.getElementById('statOrders').textContent = orders.length;
+  document.getElementById('statDelivered').textContent = orders.filter(o=>o.status==='delivered').length;
+  document.getElementById('statProducts').textContent = (user.products||[]).length;
+
+  const body = document.getElementById('dashOrdersBody');
+  if(orders.length===0){
+    body.innerHTML = `<tr><td colspan="4"><div class="empty"><div class="ic">▤</div>لا توجد طلبات بعد</div></td></tr>`;
+    return;
+  }
+  body.innerHTML = orders.slice(0,5).map(o=>`
+    <tr>
+      <td>${o.id}</td><td>${o.product}</td><td>${o.date}</td>
+      <td><span class="badge ${STATUS_MAP[o.status].cls}">${STATUS_MAP[o.status].label}</span></td>
+    </tr>`).join('');
+}
+
+/* ===================== RENDER: ORDERS ===================== */
+function renderOrders(user){
+  const orders = user.orders || [];
+  const body = document.getElementById('ordersBody');
+  if(orders.length===0){
+    body.innerHTML = `<tr><td colspan="6"><div class="empty"><div class="ic">▤</div>لا توجد طلبات بعد. ابدأ بالبيع لتظهر طلبياتك هنا.</div></td></tr>`;
+    return;
+  }
+  body.innerHTML = orders.map(o=>`
+    <tr>
+      <td>${o.id}</td><td>${o.product}</td><td>${o.client}</td><td>${o.amount}</td><td>${o.date}</td>
+      <td><span class="badge ${STATUS_MAP[o.status].cls}">${STATUS_MAP[o.status].label}</span></td>
+    </tr>`).join('');
+}
+
+/* ===================== RENDER: BRAND ===================== */
+function renderBrand(user){
+  document.getElementById('brandName').value = user.brandName || '';
+  if(user.logo){
+    document.getElementById('logoPreviewWrap').innerHTML = `<img src="${user.logo}" alt="شعار البراند">`;
+  }
+  const list = document.getElementById('productPickList');
+  list.innerHTML = CATALOG.map(p=>`
+    <div class="product-pick ${user.products?.includes(p.id)?'selected':''}" data-id="${p.id}" onclick="toggleProduct('${p.id}')">
+      <div class="p-thumb">${p.brand?'<span style="font-size:9px;font-weight:800;letter-spacing:.5px;color:var(--gold)">'+p.brand+'</span>':'✦'}</div>
+      <div class="p-info"><h4>${p.name}</h4><span>${p.cat}</span></div>
+      <div class="check"></div>
+    </div>`).join('');
+  updateSelectedCount(user);
+}
+
+function updateSelectedCount(user){
+  document.getElementById('selectedCount').textContent = (user.products||[]).length;
+}
+
+function toggleProduct(id){
+  const email = localStorage.getItem(SESSION_KEY);
+  const users = loadUsers();
+  const u = users[email];
+  u.products = u.products || [];
+  const idx = u.products.indexOf(id);
+  if(idx>-1) u.products.splice(idx,1); else u.products.push(id);
+  saveUsers(users);
+  renderBrand({...u, email});
+  renderDashboard({...u, email});
+}
+
+function onLogoUpload(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    const email = localStorage.getItem(SESSION_KEY);
+    const users = loadUsers();
+    users[email].logo = ev.target.result;
+    saveUsers(users);
+    document.getElementById('logoPreviewWrap').innerHTML = `<img src="${ev.target.result}" alt="شعار البراند">`;
+    showToast('تم رفع الشعار بنجاح');
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveBrand(){
+  const email = localStorage.getItem(SESSION_KEY);
+  const users = loadUsers();
+  users[email].brandName = document.getElementById('brandName').value.trim();
+  saveUsers(users);
+  showToast('تم حفظ معلومات البراند');
+}
+
+/* ===================== RENDER: PROFILE ===================== */
+function renderProfile(user){
+  document.getElementById('profileAvatar').textContent = (user.name||user.email)[0].toUpperCase();
+  document.getElementById('profileName').textContent = user.name || user.email;
+  document.getElementById('profileEmail').textContent = user.email;
+  document.getElementById('pName').value = user.name || '';
+  document.getElementById('pEmail').value = user.email;
+  document.getElementById('pPhone').value = user.phone || '';
+  document.getElementById('pPass').value = '';
+}
+
+function saveProfile(){
+  const email = localStorage.getItem(SESSION_KEY);
+  const users = loadUsers();
+  const u = users[email];
+  u.name = document.getElementById('pName').value.trim();
+  u.phone = document.getElementById('pPhone').value.trim();
+  const newPass = document.getElementById('pPass').value;
+  if(newPass){
+    if(newPass.length < 6){ showToast('كلمة المرور يجب أن تكون 6 أحرف على الأقل'); return; }
+    u.pass = newPass;
+  }
+  saveUsers(users);
+  const ok = document.getElementById('profileOk');
+  ok.textContent='تم حفظ التغييرات بنجاح'; ok.style.display='block';
+  renderTopbar({...u, email});
+  renderProfile({...u, email});
+  setTimeout(()=>ok.style.display='none', 2500);
+}
+
+/* ===================== INIT ===================== */
+(function init(){
+  loadUsers();
+  if(currentUser()){ enterApp(); }
+  else { goto('page-login'); }
+})();
+</script>
+
+</body>
+</html>
